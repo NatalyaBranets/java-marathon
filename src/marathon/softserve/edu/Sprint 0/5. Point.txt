@@ -1,0 +1,32 @@
+package marathon.softserve.edu;
+
+class Point {
+    private int x;
+    private int y;
+    
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+    
+    public int[] getXYPair() {
+        return new int[]{this.x,this.y};
+    }
+    
+    public double distance(int x, int y) {
+       double dx = this.x - x;
+       double dy = this.y - y;
+       return Math.sqrt(dx*dx + dy*dy);
+    }
+    
+    public double distance(Point point) {
+        double px = this.x-point.x;
+        double py = this.y-point.y;
+        return Math.sqrt(px*px + py*py);
+    }
+    
+    public double distance() {
+        return Math.sqrt(x*x + y*y);
+    }
+    
+}

@@ -1,0 +1,27 @@
+package marathon.softserve.edu;
+
+public class Employee {
+	public String fullName;
+	public float salary;
+
+	public static void main(String[] args) {
+
+		Employee emp1 = new Employee();
+		emp1.fullName = "Anna";
+		emp1.salary = 100000f;
+
+		Employee emp2 = new Employee();
+		emp2.fullName = "Kate";
+		emp2.salary = 1000f;
+
+		Employee[] employees = { emp1, emp2 };
+
+		String employeesInfo = "";
+		employeesInfo += "[";
+		for (Employee employee : employees) {
+			employeesInfo += String.format("{fullName: \"%s\", salary: %.1f}, ", employee.fullName, employee.salary);
+		}
+		employeesInfo = employeesInfo.substring(0, employeesInfo.length() - 2);
+		employeesInfo += "]";
+	}
+}

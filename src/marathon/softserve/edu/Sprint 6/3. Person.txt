@@ -1,0 +1,37 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.BinaryOperator;
+
+public class Person {
+	String name;
+	String surname;
+
+	public Person(String name, String surname) {
+		super();
+		this.name = name;
+		this.surname = surname;
+	}
+	
+	public static void main(String[] args) {
+		List<Person> personList = new ArrayList<>();
+        personList.add(new Person("Kate", "Lee"));
+        personList.add(new Person("Anya", "Boo"));
+        
+        App app = new App();
+        app.createGreetings(personList, App.greetingOperator).stream().forEach(System.out::println);
+	}
+
+}
+
+class App {
+
+	static BinaryOperator<String> greetingOperator = (parameter1, parameter2) -> {
+		return "Hello " + parameter1 + " " + parameter2 + "!!!";
+	};
+
+	public static List<String> createGreetings(List<Person> people, BinaryOperator<String> binary) {
+		List<String> newPeople = new ArrayList<>();
+		people.forEach(person -> newPeople.add(binary.apply(person.name, person.surname)));
+		return newPeople;
+	}
+}

@@ -1,0 +1,44 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Person1 {
+	String name;
+	int discount = 10;
+	String product = "product1";
+
+	Person1(String name) {
+		this.name = name;
+	}
+
+	DecisionMethod goShopping = (p, d) -> product.equals(p) && d > discount;
+	
+
+}
+
+@FunctionalInterface
+interface DecisionMethod {
+	public boolean select(String n, int d);
+}
+
+public class Shop {
+
+	public List<DecisionMethod> clients = new ArrayList<>();
+
+	public int sale(String product, int percent) {
+		return (int) clients.stream().filter(clients -> clients.select(product, percent)).count();
+	}
+	
+	public static void main(String[] args) {
+		Shop s = new Shop();
+		Person1 p = new Person1("Katya");
+		s.clients.add(p.goShopping);
+		Person1 p2 = new Person1("Anna");
+                s.clients.add(p2.goShopping);
+                Person1 p3 = new Person1("Mariya");
+                s.clients.add(p3.goShopping);
+		
+        System.out.println(s.sale("product1", 20));
+        System.out.println(s.sale("product1", 10));
+		
+	}
+}

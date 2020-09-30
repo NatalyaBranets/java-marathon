@@ -1,0 +1,27 @@
+import java.util.HashSet;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
+
+public class MyUtils {
+
+	static Predicate<Integer> getPredicateFromSet(Set<Predicate<Integer>> predicates) {
+		
+		return predicates.stream().reduce(Predicate::and).get();
+
+	}
+
+	public static void main(String[] args) {
+
+		Set<Predicate<Integer>> predicateSet = new HashSet<>();
+		predicateSet.add(x -> x > 0);
+		predicateSet.add(x -> x < 10);
+		predicateSet.add(x -> x % 2 == 0);
+
+		Predicate<Integer> predicate = getPredicateFromSet(predicateSet);
+
+		System.out.println(predicate.test(6));
+		System.out.println(predicate.test(12));
+		System.out.println(predicate.test(5));
+	}
+}

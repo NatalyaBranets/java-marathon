@@ -1,0 +1,135 @@
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.List;
+
+public class Caffee implements DrinkReceipt, DrinkPreparation, Rating {
+
+	private String name;
+	private int rating;
+	private Map<String, Integer> ingredients = new HashMap<>();
+
+	public Caffee(String name, int rating) {
+		super();
+		this.name = name;
+		this.rating = rating;
+	}
+
+	public Caffee() {
+	}
+
+	@Override
+	public String getName() {
+		return this.name;
+	}
+
+	@Override
+	public DrinkReceipt addComponent(String componentName, int componentCount) {
+		this.ingredients.put(componentName, componentCount);
+		return this;
+	}
+
+	@Override
+	public Map<String, Integer> makeDrink() {
+		this.addComponent("Water", 100).addComponent("Arabica", 20);
+		return this.ingredients;
+	}
+
+	@Override
+	public int getRating() {
+		return this.rating;
+	}
+
+	public Map<String, Integer> getIngredients() {
+		return this.ingredients;
+	}
+
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + "[name=" + name + ", rating=" + rating + "]";
+	}
+
+}
+
+class Cappuccino extends Caffee {
+
+	public Cappuccino() {
+		super();
+	}
+
+	public Cappuccino(String name, int rating) {
+		super(name, rating);
+	}
+	
+	@Override
+	public Map<String, Integer> makeDrink() {
+		super.makeDrink();
+		this.addComponent("Milk", 50);
+		return getIngredients();
+	}
+}
+
+class Espresso extends Caffee {
+
+	public Espresso() {
+		super();
+	}
+
+	public Espresso(String name, int rating) {
+		super(name, rating);
+	}
+
+	@Override
+	public Map<String, Integer> makeDrink() {
+		super.makeDrink();
+		getIngredients().replace("Water", 50);
+		return getIngredients();
+	}
+	
+}
+
+
+interface DrinkPreparation {
+	
+	Map<String, Integer> makeDrink();
+
+}
+
+interface DrinkReceipt {
+
+	String getName();
+
+	DrinkReceipt addComponent(String componentName, int componentCount);
+}
+
+interface Rating {
+
+	int getRating();
+
+}
+
+class MyUtils {
+
+	public Map<String, Double> averageRating(List<Caffee> coffees) {
+		return coffees.stream()
+				.collect(Collectors.groupingBy(Caffee::getName, Collectors.averagingInt(Caffee::getRating)));
+	}
+}
+
+
+class Main {
+	public static void main(String[] args) {
+
+		List<Caffee> originCaffee = new ArrayList<>();
+		originCaffee.add(new Espresso("Espresso", 8));
+		originCaffee.add(new Cappuccino("Cappuccino", 10));
+		originCaffee.add(new Espresso("Espresso", 10));
+		originCaffee.add(new Cappuccino("Cappuccino", 6));
+		originCaffee.add(new Caffee("Caffee", 6));
+
+		System.out.println(originCaffee);
+
+		MyUtils myUtils = new MyUtils();
+		System.out.println(myUtils.averageRating(originCaffee));
+	}
+}

@@ -1,0 +1,264 @@
+import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+
+public class Employee {
+
+	private String name;
+	private int experience;
+	private BigDecimal basePayment;
+
+	public Employee(String name, int experience, BigDecimal basePayment) {
+		super();
+		this.name = name;
+		this.experience = experience;
+		this.basePayment = basePayment.setScale(2); // задати кількість знаків після коми
+	}
+
+	public Employee() {
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getExperience() {
+		return experience;
+	}
+
+	public BigDecimal getPayment() {
+		return basePayment;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((basePayment == null) ? 0 : basePayment.hashCode());
+		result = prime * result + experience;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Employee other = (Employee) obj;
+		if (basePayment == null) {
+			if (other.basePayment != null)
+				return false;
+		} else if (!basePayment.equals(other.basePayment))
+			return false;
+		if (experience != other.experience)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Employee [name=" + name + ", experience=" + experience + ", basePayment=" + basePayment + "]";
+	}
+	
+}
+
+
+class Manager extends Employee {
+	private double coefficient;
+
+	public Manager(String name, int experience, BigDecimal basePayment, double coefficient) {
+		super(name, experience, basePayment);
+		this.coefficient = coefficient;
+	}
+
+	public Manager() {
+	}
+
+	public double getCoefficient() {
+		return coefficient;
+	}
+
+	@Override
+	public BigDecimal getPayment() {
+		return super.getPayment().multiply(BigDecimal.valueOf(getCoefficient()));
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		long temp;
+		temp = Double.doubleToLongBits(coefficient);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Manager other = (Manager) obj;
+		if (Double.doubleToLongBits(coefficient) != Double.doubleToLongBits(other.coefficient))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		String employee = super.toString();
+		return "Manager " + employee.substring(Manager.super.getClass().getName().length()+2, employee.length() - 1) 
+				 + ", coefficient=" + coefficient + "]";
+	}
+	
+	
+
+}
+
+
+class ExperienceComparator implements Comparator<Employee>{
+@Override
+public int compare(Employee o1, Employee o2) {
+	if(o1 == null && o2 == null) {
+		return 0;
+	} else if (o1 == null) {
+		return -1;
+	} else if (o2 == null) {
+		return 1;
+	}
+	return o1.getExperience()-o2.getExperience();
+}
+}
+
+
+PaymentComparator implements Comparator<Employee>{
+@Override
+public int compare(Employee o1, Employee o2) {
+	if(o1 == null && o2 == null) {
+		return 0;
+	} else if (o1 == null) {
+		return -1;
+	} else if (o2 == null) {
+		return 1;
+	}
+	return o1.getPayment().compareTo(o2.getPayment());
+}
+}
+
+class MyUtils {
+
+	public List<Employee> largest(List<Employee> result, List<Employee>workers, Comparator<Employee>comparator) {
+		if(workers == null) {
+			return null;
+		} 
+		if(workers.size() == 0) {
+			return result;
+		}
+		
+		List<Employee> temp = new ArrayList<>(workers);
+		Employee maxEmployee = Collections.max(temp, comparator);
+		do {
+			if (!result.contains(maxEmployee)) {
+				result.add(maxEmployee);
+			}
+			temp.remove(maxEmployee);
+			if(temp.size()>0) {
+				maxEmployee = Collections.max(temp, comparator);
+			}
+		} while ((temp.size()>0) && (comparator.compare(result.get(result.size() - 1), maxEmployee) == 0));
+		return result;
+	}
+	
+	
+	
+	public List<Employee> largestEmployees(List<Employee>workers) {
+		List<Employee> result = new ArrayList<>();
+		result = largest(result, workers, new ExperienceComparator());
+		result = largest(result, workers, new PaymentComparator());
+		return result;
+	}
+	
+}
+
+class Main {
+public static void main(String[] args) {
+	 MyUtils test = new MyUtils();
+
+     List<Employee> workers = new java.util.ArrayList<>(Collections.emptyList());
+     workers.add(new Employee("Ivan", 10, new BigDecimal("3000.00")));
+     workers.add(new Manager("Petro", 9, new BigDecimal("3000.00"), 1.5));
+     workers.add(new Employee("Stepan", 8, new BigDecimal("4000.00")));
+     workers.add(new Employee("Andriy", 7, new BigDecimal("3500.00")));
+     workers.add(new Employee("Ihor", 5, new BigDecimal("4500.00")));
+     workers.add(new Manager("Vasyl", 8, new BigDecimal("2000.00"), 2.0));
+
+     System.out.println("===Test base===");
+     List<Employee> newWorkers;
+     newWorkers = test.largestEmployees(workers);
+     for (Employee e : newWorkers) {
+         System.out.print("Name: " + e.getName());
+         System.out.print(", Salary: " + e.getPayment());
+         System.out.print(", Experience: " + e.getExperience());
+         System.out.println();
+     }
+
+     List<Employee> originList = new ArrayList<>();
+     originList.add(new Employee("Ivan", 10, new BigDecimal("3000.00")));
+     originList.add(new Manager("Petro", 9, new BigDecimal("3000.00"), 1.5));
+
+     System.out.println("===Test One employee");
+
+     List<Employee> oneEmp = new ArrayList<>();
+     oneEmp.add(new Employee("Ivan", 10, new BigDecimal("3000.00")));
+
+     new MyUtils().largestEmployees(oneEmp);
+     System.out.println(oneEmp.get(0).getName());
+
+
+     System.out.println("===Test Duplicate Emp===");
+     List<Employee> dupEmp = new ArrayList<>();
+     dupEmp.add(new Employee("Ivan", 10, new BigDecimal("3000.00")));
+     dupEmp.add(new Employee("Ivan", 10, new BigDecimal("3000.00")));
+
+     List<Employee> newdupEmp;
+     newdupEmp = test.largestEmployees(dupEmp);
+     for (Employee e : newdupEmp) {
+         System.out.print("Name: " + e.getName());
+         System.out.print(", Salary: " + e.getPayment());
+         System.out.print(", Experience: " + e.getExperience());
+         System.out.println();
+     }
+
+     System.out.println("===Test checkDuplicatePayment===");
+     List<Employee> checkDuplicatePayment = new ArrayList<>();
+     checkDuplicatePayment.add(new Employee("Ivan", 10, new BigDecimal(3000.00)));
+     checkDuplicatePayment.add(new Manager("Petro", 9, new BigDecimal(3000.00), 1.5));
+     checkDuplicatePayment.add(new Employee("Ihor", 5, new BigDecimal(4500.00)));
+     checkDuplicatePayment.add(new Manager("Vasyl", 8, new BigDecimal(2000.00), 2.0));
+
+     List<Employee> newCheckDuplicatePayment;
+     newCheckDuplicatePayment = test.largestEmployees(checkDuplicatePayment);
+     for (Employee e : newCheckDuplicatePayment) {
+         System.out.print("Name: " + e.getName());
+         System.out.print(", Salary: " + e.getPayment());
+         System.out.print(", Experience: " + e.getExperience());
+         System.out.println();
+     }
+
+ }
+}

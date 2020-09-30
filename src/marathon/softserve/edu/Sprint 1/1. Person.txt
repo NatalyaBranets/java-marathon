@@ -1,0 +1,46 @@
+class Person {
+	private int age;
+	private String healthInfo;
+	private String name;
+
+	public Person(int age, String healthInfo, String name) {
+		this.age = age;
+		this.healthInfo = healthInfo;
+		this.name = name;
+	}
+
+	public Person() {
+	}
+
+	public String getHealthStatus() {
+		return name + " " + healthInfo;
+	}
+
+}
+
+class Adult extends Person {
+
+	private String passportNumber;
+
+	public Adult(int age, String healthInfo, String name, String passportNumber) {
+		super(age, healthInfo, name);
+		this.passportNumber = passportNumber;
+	}
+
+	public Adult() {
+	}
+}
+
+class Child extends Person {
+	
+	private String childIDNumber;
+
+	public Child(int age, String healthInfo, String name, String childIDNumber) {
+		super(age, healthInfo, name);
+		this.childIDNumber = childIDNumber;
+	}
+
+	public Child() {
+	}
+
+}

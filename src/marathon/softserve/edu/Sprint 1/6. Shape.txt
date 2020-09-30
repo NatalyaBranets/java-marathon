@@ -1,0 +1,264 @@
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
+
+public abstract class Shape {
+
+	private String name;
+
+	public Shape(String name) {
+		super();
+		this.name = name;
+	}
+
+	public Shape() {
+	}
+
+	public String getName() {
+		return name;
+	}
+	
+	public abstract double getArea();
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Shape other = (Shape) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+	
+	
+}
+
+
+
+
+
+class Circle extends Shape {
+
+	private double radius;
+	
+	public Circle(String name, double radius) {
+		super(name);
+		this.radius = radius;
+	}
+
+	public Circle(double radius) {
+		super();
+		this.radius = radius;
+	}
+	
+	public Circle() {
+		super();	
+	}
+
+	public double getRadius() {
+		return radius;
+	}
+	
+	@Override
+	public double getArea() {
+		return (Math.PI * (radius * 2));
+	}
+
+	@Override
+	public String toString() {
+		return "Circle [radius=" + radius + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		long temp;
+		temp = Double.doubleToLongBits(radius);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Circle other = (Circle) obj;
+		if (Double.doubleToLongBits(radius) != Double.doubleToLongBits(other.radius))
+			return false;
+		return true;
+	}
+	
+	
+	
+	
+}
+
+class Rectangle extends Shape {
+	private double height;
+	private double width;
+	
+	public Rectangle(String name, double height, double width) {
+		super(name);
+		this.height = height;
+		this.width = width;
+	}
+
+	public Rectangle(double height, double width) {
+		super();
+		this.height = height;
+		this.width = width;
+	}
+	
+	public Rectangle() {
+		super();	
+	}
+
+	public double getHeight() {
+		return height;
+	}
+	
+	public double getWidth() {
+		return width;
+	}
+	
+	@Override
+	public double getArea() {
+		return height * width;
+	}
+
+	@Override
+	public String toString() {
+		return "Rectangle [height=" + height + ", width=" + width + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		long temp;
+		temp = Double.doubleToLongBits(height);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(width);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Rectangle other = (Rectangle) obj;
+		if (Double.doubleToLongBits(height) != Double.doubleToLongBits(other.height))
+			return false;
+		if (Double.doubleToLongBits(width) != Double.doubleToLongBits(other.width))
+			return false;
+		return true;
+	}
+	
+}
+
+class MyUtils {
+
+	public List<Shape> maxAreas(List<Shape> shape) {
+
+		List<Shape> shapes = new ArrayList<>();
+
+		if (shape.isEmpty() || shapes.size() == 1) {
+			return shape;
+		}
+
+		List<Shape> circle = new ArrayList<>();
+		List<Shape> rectangle = new ArrayList<>();
+
+		for (Shape sp : shape) {
+			if (sp == null) {
+				return shapes;
+			}
+
+			if (sp instanceof Circle) {
+				circle.add(sp);
+			}
+			if (sp instanceof Rectangle) {
+				rectangle.add(sp);
+			}
+		}
+
+		double maxCircle;
+		double maxRectangle;
+
+		try {
+			maxCircle = circle
+					.stream()
+					.max(Comparator.comparing(Shape::getArea))
+					.get().getArea();
+			maxRectangle = rectangle
+					.stream()
+					.max(Comparator.comparing(Shape::getArea))
+					.get().getArea();
+		} catch (NoSuchElementException ex) {
+			return shapes;
+		}
+
+		for (Shape sp : shape) {
+			if (sp instanceof Circle && sp.getArea() == maxCircle) {
+				shapes.add(sp);
+			}
+			if (sp instanceof Rectangle && sp.getArea() == maxRectangle) {
+				shapes.add(sp);
+			}
+		}
+
+		List<Shape> distinct = shapes.stream().distinct().collect(Collectors.toList());
+		shapes = distinct;
+
+		return shapes;
+
+	}
+
+}
+
+class Main {
+public static void main(String[] args) {
+	
+	List<Shape> shape = new ArrayList<>();
+	shape.add(new Circle("circle", 2));
+	shape.add(new Rectangle("rectangle", 2, 3));
+	shape.add(new Circle("circle", 1));
+	shape.add(new Rectangle("rectangle", 3, 2));
+	shape.add(new Circle("circle", 0.5));
+	shape.add(new Rectangle("rectangle", 1, 2));
+	
+	System.out.println(shape);
+	
+	 List<Shape> newShape = new MyUtils().maxAreas(shape);
+	 System.out.println(newShape);
+}

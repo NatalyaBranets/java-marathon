@@ -1,0 +1,218 @@
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
+
+
+
+class Person {
+
+	private String name;
+
+	public Person(String name) {
+		this.name = name;
+	}
+
+	public Person() {
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Person other = (Person) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+
+}
+
+
+class Student extends Person {
+
+	private String studyPlace;
+	private int studyYears;
+
+	public Student(String name, String studyPlace, int studyYears) {
+		super(name);
+		this.studyPlace = studyPlace;
+		this.studyYears = studyYears;
+	}
+
+	public Student() {
+		super();
+	}
+
+	public String getStudyPlace() {
+		return studyPlace;
+	}
+
+	public int getStudyYears() {
+		return studyYears;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((studyPlace == null) ? 0 : studyPlace.hashCode());
+		result = prime * result + studyYears;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Student other = (Student) obj;
+		if (studyPlace == null) {
+			if (other.studyPlace != null)
+				return false;
+		} else if (!studyPlace.equals(other.studyPlace))
+			return false;
+		if (studyYears != other.studyYears)
+			return false;
+		return true;
+	}
+
+}
+
+
+class Worker extends Person {
+
+	private String workPosition;
+	private int experienceYears;
+
+	public Worker(String name, String workPosition, int experienceYears) {
+		super(name);
+		this.workPosition = workPosition;
+		this.experienceYears = experienceYears;
+	}
+
+	public Worker() {
+		super();
+	}
+
+	public String getWorkPosition() {
+		return workPosition;
+	}
+
+	public int getExperienceYears() {
+		return experienceYears;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + experienceYears;
+		result = prime * result + ((workPosition == null) ? 0 : workPosition.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Worker other = (Worker) obj;
+		if (experienceYears != other.experienceYears)
+			return false;
+		if (workPosition == null) {
+			if (other.workPosition != null)
+				return false;
+		} else if (!workPosition.equals(other.workPosition))
+			return false;
+		return true;
+	}
+
+	
+	
+	
+}
+
+
+class MyUtils {
+
+	public List<Person> maxDuration(List<Person> persons) {
+
+		List<Person> person = new ArrayList<>();
+
+		if (persons.isEmpty() || persons == null) {
+			return person;
+		}
+
+		List<Student> student = new ArrayList<>();
+		List<Worker> worker = new ArrayList<>();
+
+		for (Person pr : persons) {
+			if (pr == null) {
+				return person;
+			}
+			if (pr instanceof Worker) {
+				worker.add((Worker) pr);
+			}
+			if (pr instanceof Student) {
+				student.add((Student) pr);
+			}
+		}
+
+		int maxStudent;
+		int maxWorker;
+
+		try {
+
+			maxStudent = student.stream().max(Comparator.comparing(Student::getStudyYears)).get().getStudyYears();
+
+			maxWorker = worker.stream().max(Comparator.comparing(Worker::getExperienceYears)).get()
+					.getExperienceYears();
+		} catch (NoSuchElementException ex) {
+			return person;
+		}
+
+		for (Person per : persons) {
+			if (per instanceof Student && ((Student) per).getStudyYears() == maxStudent) {
+				person.add(per);
+			}
+			if (per instanceof Worker && ((Worker) per).getExperienceYears() == maxWorker) {
+				person.add(per);
+			}
+		}
+
+		List<Person> distinct = new ArrayList<>();
+		distinct = person.stream().distinct().collect(Collectors.toList());
+		person = distinct;
+
+		return person;
+
+	}
+}

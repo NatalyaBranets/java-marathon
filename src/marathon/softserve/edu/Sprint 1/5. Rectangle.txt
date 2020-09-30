@@ -1,0 +1,92 @@
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+
+interface Figure {
+
+	public double getPerimeter();
+
+}
+
+
+class Rectang implements Figure {
+
+	private double length;
+	private double width;
+
+	public Rectang(double length, double width) {
+		super();
+		this.length = length;
+		this.width = width;
+	}
+
+	public double getLength() {
+		return length;
+	}
+
+	public double getWidth() {
+		return width;
+	}
+
+	public double getPerimeter() {
+		return 2 * (length + width);
+	}
+}
+
+class Square implements Figure {
+
+	private double length;
+
+	public Square(double length) {
+		this.length = length;
+	}
+
+	public Square() {
+
+	}
+
+	public double getLength() {
+		return length;
+	}
+
+	public double getPerimeter() {
+		return 4 * length;
+	}
+}
+
+class MyUtils {
+
+	public double sumPerimeter(List<Figure>firures) {
+		
+		if (firures == null || firures.isEmpty()) {
+            return 0;
+        }
+		
+		double sum = 0; 
+		
+		for(Figure fr : firures) {
+			if(fr instanceof Square) {
+				sum = sum + fr.getPerimeter();
+			}
+			if(fr instanceof Rectang) {
+				sum = sum + fr.getPerimeter();
+			}
+		}
+		return sum;
+	}
+}
+
+class Main {
+public static void main(String[] args) {
+	 
+	  List<Figure> figureList = new ArrayList<>();
+      figureList.add(new Square(4));
+      figureList.add(new Square(5));
+      figureList.add(new Rectang(2, 3));
+
+      double perim = new MyUtils().sumPerimeter(figureList);
+      System.out.println(perim);
+}
+}

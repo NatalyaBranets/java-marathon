@@ -1,0 +1,7 @@
+public class ArrayUtil {
+
+	public static <T> T setAndReturn(T[] arr, T value, int index) {
+		arr[index] = value;
+		return value;
+	}
+}

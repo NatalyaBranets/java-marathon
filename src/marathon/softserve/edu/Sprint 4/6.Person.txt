@@ -1,0 +1,109 @@
+import java.util.Arrays;
+import java.util.Comparator;
+
+class Person {
+
+	protected String name;
+	protected int age;
+
+	public Person(String name, int age) {
+		this.name = name;
+		this.age = age;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public String toString() {
+		return "Name: " + name + ", Age: " + age;
+	}
+}
+
+class PersonComparator implements Comparator<Person> {
+	@Override
+	public int compare(Person p1, Person p2) {
+		if (!p1.getName().equals(p2.getName())) {
+			return p1.getName().compareTo(p2.getName());
+		}
+		return p1.getAge() - p2.getAge();
+	}
+}
+
+
+
+class Employee extends Person {
+	private double salary;
+
+	public Employee(String name, int age, double salary) {
+		super(name, age);
+		this.salary = salary;
+	}
+
+	public double getSalary() {
+		return salary;
+	}
+
+	public String toString() {
+		return super.toString() + ", Salary: " + salary;
+	}
+}
+
+class EmployeeComparator implements Comparator<Employee> {
+	@Override
+	public int compare(Employee p1, Employee p2) {
+		int res = new PersonComparator().compare(p1, p2);
+		return res != 0 ? res : (int) p1.getSalary() - (int) p2.getSalary();
+
+	}
+}
+
+
+
+
+class Developer extends Employee {
+	private Level level;
+
+	public Developer(String name, int age, double salary, Level level) {
+		super(name, age, salary);
+		this.level = level;
+	}
+
+	public Level getLevel() {
+		return level;
+	}
+
+	public String toString() {
+		return super.toString() + ", Level " + level.name();
+	}
+
+}
+
+class DeveloperComparator implements Comparator<Developer> {
+	@Override
+	public int compare(Developer p1, Developer p2) {
+		int res = new EmployeeComparator().compare(p1, p2);
+		return res !=0 ? res : p1.getLevel().compareTo(p2.getLevel());
+	}
+}
+
+
+
+
+enum Level {
+	JUNIOR, MIDDLE, SENIOR
+}
+
+public class MyUtil6 {
+
+	public static <T extends Person> void sortPeople(T[] arr, Comparator<? super T> comparator) {
+		Arrays.sort(arr, comparator);
+	}
+
+	
+
+}

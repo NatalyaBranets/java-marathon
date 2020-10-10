@@ -1,0 +1,61 @@
+public interface Strategy {
+	
+	double doOperation(int a, int b);	
+}
+
+class Test {
+
+	public static void execute(int a, int b, Strategy strategy) {
+		double result = strategy.doOperation(a, b);
+		System.out.println(result);
+	}
+
+	public static void addAtoB(int a, int b) {
+		Strategy add = new Strategy() {
+			@Override
+			public double doOperation(int a, int b) {
+				return (double) (a + b);
+			}
+		};
+		execute(a, b, add);
+	}
+
+	public static void subtractBfromA(int a, int b) {
+		Strategy substract = new Strategy() {
+			@Override
+			public double doOperation(int a, int b) {
+				return (double) (b - a);
+			}
+		};
+		execute(a, b, substract);
+	}
+
+	public static void multiplyAbyB(int a, int b) {
+
+		Strategy multiply = new Strategy() {
+			@Override
+			public double doOperation(int a, int b) {
+				return (double) (a * b);
+			}
+		};
+		execute(a, b, multiply);
+	}
+
+	public static void divideAbyB(int a, int b) {
+		Strategy divide = new Strategy() {
+			@Override
+			public double doOperation(int a, int b) {
+				return (double) (a / b);
+			}
+		};
+		execute(a, b, divide);
+	}
+
+	public static void main(String[] args) {
+		Test test = new Test();
+		test.addAtoB(4, 5);
+		test.divideAbyB(8, 4);
+		test.multiplyAbyB(2, 9);
+		test.subtractBfromA(4, 2);
+	}
+}

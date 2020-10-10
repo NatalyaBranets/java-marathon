@@ -1,0 +1,158 @@
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Comparator;
+
+enum SortOrder {
+	ASC, DESC
+}
+
+@SuppressWarnings("rawtypes")
+public class AddressBook implements Iterable {
+
+	private NameAddressPair[] addressBook;
+	private int counter = 0;
+
+	public AddressBook(int capacity) {
+		addressBook = new NameAddressPair[capacity];
+
+	}
+
+	public boolean create(String firstName, String lastName, String address) {
+		NameAddressPair nameAddressPair = new NameAddressPair(new NameAddressPair.Person(firstName, lastName), address);
+		addressBook[counter++] = nameAddressPair;
+		return true;
+	}
+
+	public String read(String firstName, String lastName) {
+		for (NameAddressPair pair : addressBook) {
+			if (pair.person.firstName.equals(firstName) && pair.person.lastName.equals(lastName)) {
+				return pair.address;
+			}
+		}
+		return null;
+	}
+
+	public boolean update(String firstName, String lastName, String address) {
+		for (NameAddressPair pair : addressBook) {
+			if (pair.person.firstName.equals(firstName) && pair.person.lastName.equals(lastName)) {
+				pair.address = address;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean delete(String firstName, String lastName) {
+		NameAddressPair.Person newPerson = new NameAddressPair.Person(firstName, lastName);
+		for (int i = 0; i < counter; i++) {
+			if (addressBook[i].person.equals(newPerson)) {
+				System.arraycopy(addressBook, i + 1, addressBook, i, addressBook.length - 1 - i);
+				counter--;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public int size() {
+		return counter;
+	}
+
+	public void sortedBy(SortOrder order) {
+		Arrays.sort(addressBook, new Comparator<NameAddressPair>() {
+			@Override
+			public int compare(NameAddressPair o1, NameAddressPair o2) {
+				int result = o1.person.firstName.compareTo(o2.person.firstName);
+				if (result == 0) {
+					result = o1.person.lastName.compareTo(o2.person.lastName);
+				}
+				return order == SortOrder.ASC ? result : -result;
+				
+			}
+		});
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Iterator iterator() {
+		return new AddressBookIterator();
+	}
+
+	private static class NameAddressPair {
+		private Person person;
+		private String address;
+
+		private NameAddressPair(Person person, String address) {
+			this.person = person;
+			this.address = address;
+		}
+
+		private static class Person {
+			private String firstName;
+			private String lastName;
+
+			private Person(String firstName, String lastName) {
+				this.firstName = firstName;
+				this.lastName = lastName;
+			}
+
+			@Override
+			public int hashCode() {
+				final int prime = 31;
+				int result = 1;
+				result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+				result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+				return result;
+			}
+
+			@Override
+			public boolean equals(Object obj) {
+				if (this == obj)
+					return true;
+				if (obj == null)
+					return false;
+				if (getClass() != obj.getClass())
+					return false;
+				Person other = (Person) obj;
+				if (firstName == null) {
+					if (other.firstName != null)
+						return false;
+				} else if (!firstName.equals(other.firstName))
+					return false;
+				if (lastName == null) {
+					if (other.lastName != null)
+						return false;
+				} else if (!lastName.equals(other.lastName))
+					return false;
+				return true;
+			}
+
+			
+			
+		}
+
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private class AddressBookIterator implements Iterator {
+		private int counter = 0;
+
+		@Override
+		public boolean hasNext() {
+			return counter < size();
+		}
+
+		@Override
+		public String next() {
+			String record = String.format("First name: %s, last name: %s, address %s",
+					addressBook[counter].person.firstName, addressBook[counter].person.lastName,
+					addressBook[counter].address);
+			counter++;
+			return record;
+			
+
+		}
+
+	}
+
+}

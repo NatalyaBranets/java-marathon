@@ -1,0 +1,46 @@
+enum ClientType {
+	NEW(1) {
+		@Override
+		public double discount() {
+			return 1.0;
+		}
+	},
+	SILVER(12) {
+		@Override
+		public double discount() {
+			return (100 - getMonth() * 0.25) / 100;
+		}
+	},
+	GOLD(30) {
+		@Override
+		public double discount() {
+			return (100 - getMonth() * 0.3) / 100;
+		}
+	},
+	PLATINUM(60) {
+		@Override
+		public double discount() {
+			return (100 - getMonth() * 0.35) / 100;
+		}
+	};
+
+	private int months;
+
+	ClientType(int months) {
+		this.months = months;
+	}
+
+	public double discount() {
+		return 0;
+	}
+
+	public double getMonth() {
+		return months;
+	}
+}
+
+public class Test {
+	public static void main(String[] args) {
+		System.out.println(ClientType.NEW.discount());
+	}
+}

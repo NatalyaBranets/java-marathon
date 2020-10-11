@@ -1,0 +1,147 @@
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+class NameException extends RuntimeException {
+
+	private static final long serialVersionUID = 1L;
+
+	public NameException(String msg) {
+		super(msg);
+	}
+
+	public NameException() {
+	}
+
+}
+
+class CodeException extends RuntimeException {
+
+	private static final long serialVersionUID = 1L;
+
+	public CodeException(String msg) {
+		super(msg);
+	}
+
+	public CodeException() {
+	}
+}
+
+public class Person {
+
+	private String firstName;
+	private String lastName;
+	private String idCode;
+
+	public Person(String firstName, String lastName, String idCode) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.idCode = idCode;
+	}
+
+	public Person() {
+	}
+
+	public void setFirstName(String firstName) throws NameException {
+		Pattern p = Pattern.compile("[A-Z][\\w- ]+");
+		Matcher m = p.matcher(firstName);
+		if (m.matches()) {
+			this.firstName = firstName;
+		} else {
+			throw new NameException("Incorrect value " + firstName
+					+ " for firstName (should start from upper case and contains only alphabetic characters and symbols -, _)");
+		}
+	}
+
+	public void setLastName(String lastName) throws NameException {
+		Pattern p = Pattern.compile("[A-Z][\\w- ]+");
+		Matcher m = p.matcher(lastName);
+		if (m.matches()) {
+			this.lastName = lastName;
+		} else {
+			throw new NameException("Incorrect value " + lastName
+					+ " for lastName (should start from upper case and contains only alphabetic characters and symbols -, _)");
+		}
+	}
+
+	public void setIdCode(String idCode) throws CodeException {
+		Pattern p = Pattern.compile("\\d{10}");
+		Matcher m = p.matcher(idCode);
+		if (m.matches()) {
+			this.idCode = idCode;
+		} else {
+			throw new CodeException("Incorrect value " + idCode + " for code (should contains exactly 10 digits)");
+		}
+	}
+
+	public String toString() {
+		return firstName + " " + lastName + ": " + idCode;
+	}
+
+	public static Person buildPerson(String firstName, String lastName, String idCode) throws IllegalArgumentException {
+
+		Person person = new Person();
+		String message = "";
+
+		try {
+			person.setFirstName(firstName);
+		} catch (NameException nx) {
+			message += nx.getMessage() + "; ";
+		}
+
+		try {
+			person.setLastName(lastName);
+		} catch (NameException nx) {
+			message += nx.getMessage() + "; ";
+		}
+
+		try {
+			person.setIdCode(idCode);
+		} catch (CodeException cx) {
+			message += cx.getMessage() + "; ";
+		}
+
+		if (message.isEmpty()) {
+			return person;
+		} else {
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result + ((idCode == null) ? 0 : idCode.hashCode());
+		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Person other = (Person) obj;
+		if (firstName == null) {
+			if (other.firstName != null)
+				return false;
+		} else if (!firstName.equals(other.firstName))
+			return false;
+		if (idCode == null) {
+			if (other.idCode != null)
+				return false;
+		} else if (!idCode.equals(other.idCode))
+			return false;
+		if (lastName == null) {
+			if (other.lastName != null)
+				return false;
+		} else if (!lastName.equals(other.lastName))
+			return false;
+		return true;
+	}
+
+}

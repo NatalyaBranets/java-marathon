@@ -1,0 +1,78 @@
+enum Color {
+	WHITE, RED, BLUE
+}
+
+enum Type {
+	RARE, ORDINARY
+}
+
+public class Plant {
+
+	private String name;
+	private Color color;
+	private Type type;
+
+	public Plant(String type, String color, String name) throws ColorException, TypeException {
+
+		try {
+			this.type = Type.valueOf(type.toUpperCase());
+		} catch (IllegalArgumentException ex) {
+			throw new TypeException("Invalid value " + type + " for field type");
+		}
+
+		try {
+			this.color = Color.valueOf(color.toUpperCase());
+		} catch (IllegalArgumentException ex) {
+			throw new ColorException("Invalid value " + color + " for field color");
+		}
+
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public String toString() {
+		return "{type: " + type + ", color: " + color + ", name: " + name + "}";
+	}
+
+	public static Plant tryCreatePlant(String type, String color, String name) {
+
+		try {
+			Plant plant = new Plant(type, color, name);
+			return plant;
+		} catch (TypeException ex) {
+			return tryCreatePlant(Type.ORDINARY.toString(), color, name);
+		} catch (ColorException ex) {
+			return tryCreatePlant(type, Color.RED.toString(), name);
+
+		}
+	}
+}
+
+class ColorException extends Exception {
+
+	private static final long serialVersionUID = 1L;
+
+	public ColorException(String m) {
+		super(m);
+	}
+}
+
+class TypeException extends Exception {
+
+	private static final long serialVersionUID = 1L;
+
+	public TypeException(String m) {
+		super(m);
+	}
+}

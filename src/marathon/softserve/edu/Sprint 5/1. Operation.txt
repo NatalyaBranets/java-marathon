@@ -1,0 +1,24 @@
+public class Operation {
+
+	public static int squareRectangle(int a, int b) {
+		if (a <= 0 || b <= 0)
+			throw new IllegalArgumentException("Negetive numbers");
+		else
+			return a * b;
+	}
+
+	public static int trySquareRectangle(int a, int b) {
+		int result;
+		try {
+			result = squareRectangle(a, b);
+		} catch (IllegalArgumentException ex) {
+			return -1;
+		}
+		return result;
+	}
+
+	public static void main(String[] args) {
+		System.out.println(squareRectangle(0, 5));
+		System.out.println(trySquareRectangle(-5, 6));
+	}
+}

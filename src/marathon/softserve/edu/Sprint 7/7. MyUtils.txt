@@ -1,0 +1,24 @@
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Stream;
+
+public class MyUtils {
+
+	 public Stream<Integer> duplicateElements(Stream<Integer> stream) {
+		 Set<Integer> items = new HashSet<>();
+		 return stream
+		    .filter(n -> n != null)
+	            .filter(n -> !items.add(n))
+	            .distinct()
+	            .sorted(Integer::compareTo);
+	    }
+	 }
+
+class Main {
+	 public static void main(String[] args) {
+	        MyUtils m = new MyUtils();
+	        m.duplicateElements(Stream.of(-8, -2, 1, 1, 12, -3, 7, 2, 4))
+	                .forEach(System.out::println);
+	    }
+     }
+}

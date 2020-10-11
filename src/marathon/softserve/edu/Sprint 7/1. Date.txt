@@ -1,0 +1,20 @@
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Year;
+
+public class Date {
+
+	public static boolean isLeapYear(int year) {
+		//return Year.isLeap(year); // 2 version
+		LocalDate givenDate = LocalDate.of(year, 01, 01);
+		return givenDate.isLeapYear();
+
+	}
+	
+	public static void main(String[] args) {
+		System.out.println("--------Leap---------");
+		System.out.println(Date.isLeapYear(2020));
+		System.out.println("--------Not Leap---------");
+		System.out.println(Date.isLeapYear(2019));
+	}
+}

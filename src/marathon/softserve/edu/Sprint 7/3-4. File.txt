@@ -1,0 +1,72 @@
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class File {
+
+	public static void writeFile(String filename, String text) {
+
+		try (FileOutputStream fileOutputStream = new FileOutputStream(filename)) {
+			fileOutputStream.write(checkLessSeven(text).getBytes());
+			fileOutputStream.close();
+		} catch (FileNotFoundException fx) {
+			fx.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private static String checkLessSeven(String bt) {
+		
+
+		String result = "";
+		for (int i = 0; i < bt.length(); i++) {
+
+			String transform = Integer.toBinaryString(bt.charAt(i));
+
+			while (transform.length() < 7) {
+				transform = "0" + transform;
+			}
+			result = result + transform;
+		}
+		return result;
+	}
+
+	public static String readFile(String filename) throws IOException {
+		String str = "";
+		String result = "";
+			try {
+				FileReader input = new FileReader(filename);
+				int i;
+				while ((i = input.read()) != -1) {
+					str += (char) i;
+				}
+				input.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			for (int n = 0; n < str.length(); n += 7) {
+				result += (char) Integer.parseInt(str.substring(0 + n, 7 + n), 2);
+			}
+			
+			return result;
+		
+	}
+		
+		
+
+	public static void main(String[] args) {
+		String file = "C:\\Users\\38093\\Desktop\\Softserve\\Java.Maraphon\\Sprint 7\\test.txt";
+		writeFile(file, "Hello!");
+		// writeFile(file, "Hello World!");
+		try {
+			System.out.println(readFile(file));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+}

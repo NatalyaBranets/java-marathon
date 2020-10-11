@@ -1,0 +1,16 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+public class DateAfter {
+
+	public static String getDateAfterToday(int years, int months, int days) {
+
+		LocalDate countLocalDate = LocalDate.now().plusYears(years).plusMonths(months).plusDays(days);
+		return countLocalDate.format(DateTimeFormatter.ISO_LOCAL_DATE);
+
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(getDateAfterToday(2, 2, 2));
+	}
+}

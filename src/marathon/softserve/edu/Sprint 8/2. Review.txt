@@ -1,0 +1,56 @@
+import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.time.LocalDate;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@interface Review {
+	String reviewer();
+
+	String date() default "today";
+}
+
+public class Util {
+
+	public static void review(String className) {
+
+		try {
+			Class<?> c = Class.forName(className);
+			if (c.isAnnotationPresent(Review.class)) {
+				Annotation anotation = c.getAnnotation(Review.class);
+				System.out.printf("Class %s was reviewed %s by %s. \n", className,
+						((Review) anotation).date().equals("today") ? LocalDate.now() : ((Review) anotation).date(),
+						((Review) anotation).reviewer());
+			} else {
+				System.out.printf("Class %s isn't marked as Reviewed", className);
+			}
+		} catch (ClassNotFoundException e) {
+			System.out.println("Class " + className + " was not found");
+		}
+	}
+	
+	public static void main(String[] args) throws ClassNotFoundException {
+        Util.review("marathon.softserve.edu8.Class7");
+        Util.review("sprint07.task2.Class8");
+        Util.review("sprint07.task2.Class9");
+        Util.review("sprint07.task2.Class10");
+
+    }
+	
+	
+}
+
+
+@Review(reviewer = "me")
+class Class7 {
+}
+
+@Review(reviewer = "he", date = "2020-07-01")
+class Class8 {
+}
+
+class Class9 {
+}

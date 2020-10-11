@@ -1,0 +1,89 @@
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Method;
+import java.util.regex.Pattern;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface CamelCase {
+}
+
+
+class CheckCamelCase {
+
+	public static final String CAMELCASE_PATTERN = "[a-z]+[a-zA-Z0-9]*";
+
+	public static boolean checkAndPrint(Class<?> clazz) {
+
+		Method[] methods = clazz.getDeclaredMethods();
+		String str = "";
+		boolean result = true;
+		for (Method m : methods) {
+			if (m.isAnnotationPresent(CamelCase.class) && !Pattern.matches(CAMELCASE_PATTERN, m.getName())) {
+				str = String.format("method %s.%s doesn't satisfy camelCase naming convention",
+                        clazz.getSimpleName(), m.getName());
+				System.out.println(str);
+				result = false;
+			}
+		}		
+		return result;
+	}
+	
+	
+
+	public static void main(String[] args) {
+		System.out.println(CheckCamelCase.checkAndPrint(Class1.class));
+		System.out.println(CheckCamelCase.checkAndPrint(Class2.class));
+		System.out.println(CheckCamelCase.checkAndPrint(ClassForAnnot.class));
+		
+	}
+
+}
+
+
+
+
+
+class ClassForAnnot {
+	@CamelCase
+	public static void example() {
+	}
+
+	@CamelCase
+	public void Example() {
+	}
+
+	public static void _main(String args[]) {
+	}
+}
+
+public class Class1 {
+	@CamelCase
+	public void correct() {
+	}
+
+	@CamelCase
+	public void InCorrect() {
+	}
+
+	@CamelCase
+	public void JustMethod() {
+	}
+}
+
+class Class2 {
+	@CamelCase
+	public void correct() {
+	}
+
+	@CamelCase
+	public void oneMoreCorrect() {
+	}
+}
+
+
+
+
+

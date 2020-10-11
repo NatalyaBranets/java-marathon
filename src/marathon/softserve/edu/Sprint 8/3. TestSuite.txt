@@ -1,0 +1,41 @@
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.lang.reflect.Modifier;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@interface TestSuite {
+	String[] value() default "";
+}
+
+public class TestSuitHandler {
+
+	public static void run(Class<?> clazz) {
+		if (clazz.isAnnotationPresent(TestSuite.class)) {
+			String[] list = clazz.getDeclaredAnnotation(TestSuite.class).value();
+			for (String m : list) {
+				try {
+					if (clazz.getMethod(m).getParameterCount() == 0
+							&& Modifier.isPublic(clazz.getMethod(m).getModifiers())
+							&& !Modifier.isStatic(clazz.getMethod(m).getModifiers())) {
+						System.out.printf("\t -- Method %s.%s started --\n", clazz.getName(), clazz.getMethod(m).getName());
+						try {
+							clazz.getMethod(m).invoke(clazz.getDeclaredConstructor().newInstance());
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						System.out.printf("\t -- Method %s.%s finished --\n", clazz.getName(), clazz.getMethod(m).getName());
+					}
+				} catch (NoSuchMethodException e) {
+					System.out.printf("Method with name %s doesn't exists or not public in class %s\n", m, clazz.getName());
+				}
+			}
+		} else {
+			System.out.printf("Class %s isn't annotated\n", clazz.getSimpleName());
+
+		}
+	}
+
+}

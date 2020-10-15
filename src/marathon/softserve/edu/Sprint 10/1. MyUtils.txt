@@ -1,0 +1,215 @@
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class MyUtils {
+	private Connection connection;
+	private Statement statement;
+	private String schemaName;
+	private ResultSet rs;
+
+	
+    public Connection createConnection() throws SQLException {
+    	
+    	DriverManager.registerDriver(new org.h2.Driver());
+		connection = DriverManager.getConnection("jdbc:h2:mem:test", "", "");
+		return connection;
+    }
+    public void closeConnection() throws SQLException {
+    	if (connection != null) {
+            connection.close();
+        }
+    }
+    public Statement createStatement() throws SQLException { 
+    	     statement = connection.createStatement();
+    	     return statement;
+    }
+    public void closeStatement() throws SQLException {
+    	if (statement != null) {
+            statement.close();
+        }
+    }
+    public void createSchema(String schemaName) throws SQLException {
+    	this.schemaName = schemaName;
+    	String query = String.format("CREATE SCHEMA IF NOT EXISTS %s;", schemaName);
+    	statement.execute(query);
+    }
+    public void dropSchema() throws SQLException {
+        String query = String.format("DROP SCHEMA IF EXISTS %s CASCADE;", schemaName);
+        statement.execute(query);
+    }
+    public void useSchema() throws SQLException {
+        String query = String.format("SET SCHEMA %s;", schemaName);
+        statement.execute(query);
+    }
+    public void createTableRoles() throws SQLException {
+        String query = "create table if not exists Roles(" +
+                "id int NOT NULL AUTO_INCREMENT, " +
+    	        "roleName VARCHAR (50) NOT NULL, " +
+                "PRIMARY KEY (id));";
+        statement.execute(query);
+    }
+    public void createTableDirections() throws SQLException {
+         String query = "create table if not exists Directions(" +
+                 "id int NOT NULL AUTO_INCREMENT, " +
+                 "directionName VARCHAR (50) NOT NULL, " +
+                 "PRIMARY KEY (id));";
+         statement.execute(query);
+    }
+    public void createTableProjects() throws SQLException {
+         String query = "create table if not exists Projects(" +
+                 "id int NOT NULL AUTO_INCREMENT, " +
+                 "projectName VARCHAR (50) NOT NULL, " +
+                 "directionId int NOT NULL, " +
+                 "FOREIGN KEY (directionId) REFERENCES Directions(id), " +
+                 "PRIMARY KEY (id));";
+         statement.execute(query);
+    }
+    public void createTableEmployee() throws SQLException {
+        String query = "create table if not exists Employee(" +
+                "id int NOT NULL AUTO_INCREMENT, " +
+                "firstName VARCHAR (50) NOT NULL, " +
+                "roleId int NOT NULL, " +
+                "projectId int NOT NULL, " +
+                "FOREIGN KEY(roleId) REFERENCES Roles(id), " +
+                "FOREIGN KEY(projectId) REFERENCES Projects(id), " +
+                "PRIMARY KEY (id));";
+        statement.execute(query);
+    }
+    public void dropTable(String tableName) throws SQLException {
+          String query = String.format("DROP TABLE %s;", tableName);
+          statement.execute(query);
+    }
+    public void insertTableRoles(String roleName) throws SQLException {
+          String query = String.format("INSERT INTO Roles(roleName) VALUES ('%s');", roleName);
+          statement.execute(query);
+    }
+    public void insertTableDirections(String directionName) throws SQLException {
+          String query = String.format("INSERT INTO Directions(directionName) VALUES ('%s');", directionName);
+          statement.execute(query);
+    }
+    public void insertTableProjects(String projectName, String directionName) throws SQLException {
+    	 String query = String.format("INSERT INTO Projects(projectName, directionId) VALUES ('%s', %s);", projectName, getDirectionId(directionName));
+         statement.execute(query);
+    }
+    public void insertTableEmployee(String firstName, String roleName, String projectName) throws SQLException {
+    	String query = String.format("INSERT INTO Employee(firstName, roleId, projectId) VALUES ('%s', %s, %s);", firstName, getRoleId(roleName), getProjectId(projectName));
+        statement.execute(query);
+    }
+    public int getRoleId(String roleName) throws SQLException {
+        String query = String.format("SELECT id FROM Roles WHERE roleName='%s';", roleName);
+        rs =statement.executeQuery(query);
+        int result = -1;
+        while(rs.next()) {
+        	result = rs.getInt("id");
+        }
+        return result;
+    }
+    public int getDirectionId(String directionName) throws SQLException {
+    	String query = String.format("SELECT id FROM Directions WHERE directionName='%s';", directionName);
+        rs =statement.executeQuery(query);
+        int result = -1;
+        while(rs.next()) {
+        	result = rs.getInt("id");
+        }
+        return result;
+    }
+    public int getProjectId(String projectName) throws SQLException {
+    	String query = String.format("SELECT id FROM Projects WHERE projectName='%s';", projectName);
+        rs =statement.executeQuery(query);
+        int result = -1;
+        while(rs.next()) {
+        	result = rs.getInt("id");
+        }
+        return result;
+    }
+    public int getEmployeeId(String firstName) throws SQLException {
+    	String query = String.format("SELECT id FROM Employee WHERE firstName='%s';", firstName);
+        rs =statement.executeQuery(query);
+        int result = -1;
+        while(rs.next()) {
+        	result = rs.getInt("id");
+        }
+        return result;
+    }
+    public List<String> getAllRoles() throws SQLException {
+    	List<String> list = new ArrayList<>();
+    	String query = "SELECT * FROM Roles;";
+    	rs = statement.executeQuery(query);
+    	while(rs.next()) {
+    		String name = rs.getString("roleName");
+    		list.add(name);
+    	}
+    	return list;
+    }
+    public List<String> getAllDirestion() throws SQLException {
+        List<String> list = new ArrayList<>();
+        String query = "SELECT * FROM Directions;";
+    	rs = statement.executeQuery(query);
+    	while(rs.next()) {
+    		String name = rs.getString("directionName");
+    		list.add(name);
+    	}
+    	return list;
+    }
+    public List<String> getAllProjects() throws SQLException {
+    	List<String> list = new ArrayList<>();
+        String query = "SELECT * FROM Projects;";
+    	rs = statement.executeQuery(query);
+    	while(rs.next()) {
+    		String name = rs.getString("projectName");
+    		list.add(name);
+    	}
+    	return list;
+    }
+    public List<String> getAllEmployee() throws SQLException {
+    	List<String> list = new ArrayList<>();
+        String query = "SELECT * FROM Employee;";
+    	rs = statement.executeQuery(query);
+    	while(rs.next()) {
+    		String name = rs.getString("firstName");
+    		list.add(name);
+    	}
+    	return list;
+    }
+    public List<String> getAllDevelopers() throws SQLException {
+        List<String>list = new ArrayList<>();
+        String query = String.format("SELECT firstName FROM Employee WHERE roleId = %s", getRoleId("Developer"));
+        rs = statement.executeQuery(query);
+    	while(rs.next()) {
+    		String name = rs.getString("firstName");
+    		list.add(name);
+    	}
+    	return list;
+    }
+    public List<String> getAllJavaProjects() throws SQLException {
+    	 List<String>list = new ArrayList<>();
+         String query = String.format("SELECT projectName FROM Projects WHERE directionId = %s", getDirectionId("Java")); 
+         rs = statement.executeQuery(query);
+     	while(rs.next()) {
+     		String name = rs.getString("projectName");
+     		list.add(name);
+     	}
+     	return list;
+    }
+    public List<String> getAllJavaDevelopers() throws SQLException {
+    	List<String>list = new ArrayList<>();
+        String query = "SELECT e.firstName FROM Employee e "
+        		+ "LEFT JOIN Roles r ON e.roleId = r.id "
+        		+ "LEFT JOIN Projects p ON e.projectId = p.id "
+        		+ "LEFT JOIN Directions d ON p.directionId = d.id "
+        		+ "WHERE r.roleName = 'Developer' AND d.directionName = 'Java'";
+        rs = statement.executeQuery(query);
+     	while(rs.next()) {
+     		String name = rs.getString("firstName");
+     		list.add(name);
+     	}
+     	return list;
+    }
+}
+

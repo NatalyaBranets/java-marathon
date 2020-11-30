@@ -1,3 +1,6 @@
+package marathon.softserve.edu;
+
+
 enum Color {
 	WHITE, RED, BLUE
 }
@@ -74,5 +77,32 @@ class TypeException extends Exception {
 
 	public TypeException(String m) {
 		super(m);
+	}
+}
+
+
+class MainPlant {
+ 
+	public static void main(String[] args) {
+		try {
+			Plant plant = new Plant("raRe", "White", "Nata");
+			System.out.println(plant.toString());
+		} catch (ColorException e) {
+			e.printStackTrace();
+		} catch (TypeException e) {
+			e.printStackTrace();
+		}
+		System.out.println("--2 part--");
+		
+		 Plant p1 = Plant.tryCreatePlant("Rare", "Blue", "plant1");
+	        Plant p2 = Plant.tryCreatePlant("Unknown type", "Blue", "plant2");
+	        Plant p3 = Plant.tryCreatePlant("Rare", "Unknown color", "plant3");
+	        Plant p4 = Plant.tryCreatePlant("Unknown type", "Unknown color", "plant4");
+	        System.out.println(p1.toString());
+	        System.out.println(p2.toString());
+	        System.out.println(p3.toString());
+	        System.out.println(p4.toString());
+		
+		
 	}
 }

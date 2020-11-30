@@ -1,3 +1,5 @@
+package marathon.softserve.edu;
+
 public class Operation {
 
 	public static int squareRectangle(int a, int b) {

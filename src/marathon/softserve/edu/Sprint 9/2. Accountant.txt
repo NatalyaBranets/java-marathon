@@ -1,3 +1,5 @@
+package marathon.softserve.edu;
+
 import java.util.function.BinaryOperator;
 
 public class Accountant {

@@ -1,3 +1,6 @@
+package marathon.softserve.edu;
+
+
 class InsufficientAmountException extends Exception {
 
 	private static final long serialVersionUID = 1L;
@@ -52,4 +55,12 @@ class CheckingAccount {
             e.printStackTrace();
         }
     }
+}
+
+
+class MainAccount {
+public static void main(String[] args) {
+	
+    BankDemo.doOperations();
+}
 }

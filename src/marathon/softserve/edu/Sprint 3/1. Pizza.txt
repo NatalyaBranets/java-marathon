@@ -1,4 +1,6 @@
-class Pizza {
+package marathon.softserve.edu;
+
+public class Pizza {
 
 	private String cheese;
 	private String meat;
@@ -85,3 +87,17 @@ class Oven {
 }
 
 
+
+class Main {
+public static void main(String[] args) {
+
+    Pizza p = Oven.cook();
+    System.out.println(p.getCheese());
+    System.out.println(p.getSeafood());
+    System.out.println(p.getMushroom());
+    System.out.println(p.getMeat());
+    System.out.println(p.getVegetable());
+	
+}
+	
+}

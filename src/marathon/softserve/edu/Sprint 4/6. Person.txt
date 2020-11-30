@@ -1,0 +1,168 @@
+package marathon.softserve.edu;
+
+import java.util.Arrays;
+import java.util.Comparator;
+
+class Person {
+
+	protected String name;
+	protected int age;
+
+	public Person(String name, int age) {
+		this.name = name;
+		this.age = age;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public String toString() {
+		return "Name: " + name + ", Age: " + age;
+	}
+}
+
+class PersonComparator implements Comparator<Person> {
+	@Override
+	public int compare(Person p1, Person p2) {
+		if (!p1.getName().equals(p2.getName())) {
+			return p1.getName().compareTo(p2.getName());
+		}
+		return p1.getAge() - p2.getAge();
+	}
+}
+
+
+
+class Employee extends Person {
+	private double salary;
+
+	public Employee(String name, int age, double salary) {
+		super(name, age);
+		this.salary = salary;
+	}
+
+	public double getSalary() {
+		return salary;
+	}
+
+	public String toString() {
+		return super.toString() + ", Salary: " + salary;
+	}
+}
+
+class EmployeeComparator implements Comparator<Employee> {
+	@Override
+	public int compare(Employee p1, Employee p2) {
+		int res = new PersonComparator().compare(p1, p2);
+		return res != 0 ? res : (int) p1.getSalary() - (int) p2.getSalary();
+
+	}
+}
+
+
+
+
+class Developer extends Employee {
+	private Level level;
+
+	public Developer(String name, int age, double salary, Level level) {
+		super(name, age, salary);
+		this.level = level;
+	}
+
+	public Level getLevel() {
+		return level;
+	}
+
+	public String toString() {
+		return super.toString() + ", Level " + level.name();
+	}
+
+}
+
+class DeveloperComparator implements Comparator<Developer> {
+	@Override
+	public int compare(Developer p1, Developer p2) {
+		int res = new EmployeeComparator().compare(p1, p2);
+		return res !=0 ? res : p1.getLevel().compareTo(p2.getLevel());
+	}
+}
+
+
+
+
+enum Level {
+	JUNIOR, MIDDLE, SENIOR
+}
+
+public class MyUtil {
+
+	public static <T extends Person> void sortPeople(T[] arr, Comparator<? super T> comparator) {
+		Arrays.sort(arr, comparator);
+	}
+
+	public static void main(String[] args) {
+		Person[] peopleArray = new Person[] { new Person("John", 40), new Person("John", 23),
+				new Employee("Fred Worker", 25, 1000), new Employee("Emma Worker", 30, 1400),
+				new Developer("Lucy Coder", 25, 1000, Level.JUNIOR),
+				new Developer("James Coder", 31, 2000, Level.MIDDLE) };
+
+		Employee[] employeeArray = new Employee[] { new Employee("Fred Worker", 25, 4000),
+				new Employee("Fred Worker", 25, 1000), new Employee("Emma Worker", 30, 1400),
+				new Developer("Lucy Coder", 25, 1000, Level.JUNIOR),
+				new Developer("James Coder", 31, 2000, Level.MIDDLE) };
+
+		Developer[] developerArray = new Developer[] { new Developer("Fred Worker", 25, 4000, Level.SENIOR),
+				new Developer("Fred Worker", 25, 4000, Level.JUNIOR),
+				new Developer("Emma Worker", 30, 1400, Level.JUNIOR),
+				new Developer("Lucy Coder", 25, 1000, Level.JUNIOR),
+				new Developer("James Coder", 31, 2000, Level.MIDDLE) };
+
+		System.out.println("===Person Before:");
+		for (Person p : peopleArray) {
+			System.out.println("Name: " + p.name + ", Age: " + p.age);
+		}
+
+		Comparator<Person> pComp = new PersonComparator();
+
+		MyUtil6.sortPeople(peopleArray, pComp);
+
+		System.out.println("===Person After:");
+		for (Person p : peopleArray) {
+			System.out.println("Name: " + p.name + ", Age: " + p.age);
+		}
+
+		System.out.println("===Employee Before:");
+		for (Employee e : employeeArray) {
+			System.out.println("Name: " + e.name + ", Age: " + e.age + ", Salary: " + e.getSalary());
+		}
+
+		MyUtil6.sortPeople(employeeArray, new EmployeeComparator());
+
+		System.out.println("===Employee After:");
+		for (Employee e : employeeArray) {
+			System.out.println("Name: " + e.name + ", Age: " + e.age + ", Salary: " + e.getSalary());
+		}
+
+		System.out.println("===Developer Before:");
+		for (Developer d : developerArray) {
+			System.out.println(
+					"Name: " + d.name + ", Age: " + d.age + ", Salary: " + d.getSalary() + ", Level: " + d.getLevel());
+		}
+
+		MyUtil6.sortPeople(developerArray, new DeveloperComparator());
+
+		System.out.println("===Developer After:");
+		for (Developer d : developerArray) {
+			System.out.println(
+					"Name: " + d.name + ", Age: " + d.age + ", Salary: " + d.getSalary() + ", Level: " + d.getLevel());
+		}
+
+	}
+
+}

@@ -1,3 +1,5 @@
+package marathon.softserve.edu;
+
 public interface Strategy {
 	
 	double doOperation(int a, int b);	

@@ -1,5 +1,9 @@
+package marathon.softserve.edu;
+
+
 class NameList {
-	private String[] names = { "Mike", "Emily", "Nick", "Patric", "Sara" };
+	
+        private String[] names = { "Mike", "Emily", "Nick", "Patric", "Sara" };
 
 	public Iterator getIterator() {
 		return new Iterator();
@@ -21,4 +25,18 @@ class NameList {
 
 		}
 	}
+}
+
+
+class Main {
+public static void main(String[] args) {
+	
+    NameList.Iterator iterator = new NameList().getIterator();
+    System.out.println(iterator.next());
+    System.out.println(iterator.next());
+    System.out.println(iterator.next());
+    System.out.println(iterator.next());
+    System.out.println(iterator.next());
+    System.out.println(iterator.next());
+}
 }

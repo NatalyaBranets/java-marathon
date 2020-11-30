@@ -1,8 +1,10 @@
+package marathon.softserve.edu;
+
 enum LineType {
 	SOLID, DOTTED, DASHED, DOUBLE
 }
 
-public class Test {
+class Test {
 
 	public static String drawLine(LineType lineType) {
 

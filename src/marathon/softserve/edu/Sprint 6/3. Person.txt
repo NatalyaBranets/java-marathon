@@ -1,3 +1,5 @@
+package marathon.softserve.edu;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BinaryOperator;
@@ -13,7 +15,8 @@ public class Person {
 	}
 	
 	public static void main(String[] args) {
-		List<Person> personList = new ArrayList<>();
+	
+        List<Person> personList = new ArrayList<>();
         personList.add(new Person("Kate", "Lee"));
         personList.add(new Person("Anya", "Boo"));
         

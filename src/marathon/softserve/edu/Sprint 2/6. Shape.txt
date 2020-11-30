@@ -1,3 +1,4 @@
+package marathon.softserve.edu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -261,4 +262,5 @@ public static void main(String[] args) {
 	
 	 List<Shape> newShape = new MyUtils().maxAreas(shape);
 	 System.out.println(newShape);
+     }
 }

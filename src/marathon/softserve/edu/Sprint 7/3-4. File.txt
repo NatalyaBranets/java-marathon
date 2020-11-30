@@ -1,3 +1,5 @@
+package marathon.softserve.edu;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
@@ -64,7 +66,6 @@ public class File {
 		try {
 			System.out.println(readFile(file));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

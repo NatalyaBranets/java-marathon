@@ -1,5 +1,8 @@
-class Person {
-	private int age;
+package marathon.softserve.edu;
+
+public class Person {
+	
+        private int age;
 	private String healthInfo;
 	private String name;
 
@@ -18,6 +21,8 @@ class Person {
 
 }
 
+
+
 class Adult extends Person {
 
 	private String passportNumber;
@@ -31,6 +36,8 @@ class Adult extends Person {
 	}
 }
 
+
+
 class Child extends Person {
 	
 	private String childIDNumber;
@@ -42,5 +49,18 @@ class Child extends Person {
 
 	public Child() {
 	}
+
+
+
+class MainPerson {
+	public static void main(String[] args) {
+		Adult adult = new Adult(30, "ill", "Katya", "B679875");
+		System.out.println(adult.getHealthStatus());
+
+		Child child = new Child(7, "ill", "Masya", "N87543679");
+		System.out.println(child.getHealthStatus());
+
+	}
+
 
 }

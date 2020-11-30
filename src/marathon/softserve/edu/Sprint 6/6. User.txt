@@ -1,3 +1,5 @@
+package marathon.softserve.edu;
+
 import java.util.function.Predicate;
 import java.util.function.BiFunction;
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ class MyUtils {
 	}
 }
 
-class User {
+public class User {
 	public final List<Integer> values = new ArrayList<Integer>();
 
 	int getFilterdValue(BiFunction<List<Integer>, Predicate<Integer>, Integer> biFunction, Predicate<Integer> predicate) {
@@ -32,7 +34,31 @@ class User {
 
 	}
 	
-	
+	public static void main(String[] args) {
+		List<Integer> numbers = new ArrayList<>();
+		numbers.add(10);
+		numbers.add(20);
+		numbers.add(5);
+		Predicate<Integer> moreSix = i -> (i<19);
+		Predicate<Integer> pr2 = x -> x != 7;
+                Predicate<Integer> pr3 = x -> x < 5;
 		
-	}
+		System.out.println(MyUtils3.findMaxByCondition(numbers, moreSix));
+		
+	User u = new User();
+        u.values.add(1);
+        u.values.add(3);
+        u.values.add(5);
+        u.values.add(7);
+
+        System.out.println("getFilterdValue: ");
+        int res = u.getFilterdValue(MyUtils3::findMaxByCondition, pr2);
+        System.out.println(res);
+
+        System.out.println("getMaxValueByCondition: ");
+        int res2 = u.getMaxValueByCondition(pr3);
+        System.out.println(res2);
+    }
+		
+}
 

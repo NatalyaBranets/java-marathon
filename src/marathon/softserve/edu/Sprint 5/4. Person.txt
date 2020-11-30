@@ -1,3 +1,5 @@
+package marathon.softserve.edu;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -144,4 +146,33 @@ public class Person {
 		return true;
 	}
 
+}
+
+
+class MainPerson {
+public static void main(String[] args) {
+	
+	Person person2 = new Person();
+	person2.setFirstName("Roza");
+	person2.setLastName("K_ ol");
+	person2.setIdCode("1234567898");
+	System.out.println(person2.toString());
+	
+	System.out.println("---------------------");
+	
+	Person person3 = new Person();
+	person3.setFirstName("rOza");
+	person3.setLastName("kolQ");
+	person3.setIdCode("76453");
+	System.out.println(person3.toString());
+	
+	System.out.println("---------------------");
+	
+	System.out.println("----------correct-----------");
+	System.out.println(Person.buildPerson("Roza", "Kola", "1234567891"));
+	
+	System.out.println("----------incorrect lastName-----------");
+	System.out.println(Person.buildPerson("koza", "lola", "1234799091"));
+	
+}
 }

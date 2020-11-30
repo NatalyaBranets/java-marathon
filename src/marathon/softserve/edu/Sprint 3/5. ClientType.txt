@@ -1,3 +1,5 @@
+package marathon.softserve.edu;
+
 enum ClientType {
 	NEW(1) {
 		@Override
